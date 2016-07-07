@@ -1,7 +1,6 @@
 <?php
-error_reporting( E_ALL );
-ini_set( 'display_errors', 1 );
-ini_set( 'max_execution_time', 6000 );
+//error_reporting( E_ALL );
+//ini_set( 'display_errors', 1 );
 
 use Mediawiki\Api\MediawikiApi;
 use Mediawiki\Api\ApiUser;
@@ -14,11 +13,11 @@ use Wikibase\DataModel\Entity\PropertyId;
 use DataValues\StringValue;
 
 // Load all of the things
-require_once( __DIR__ . "/vendor/autoload.php" );
+require_once( __DIR__ . '/vendor/autoload.php' );
 require_once( __DIR__ . '/config.inc.php' );
 
 // Use the mediawiki api and Login
-$api = new MediawikiApi( "https://www.wikidata.org/w/api.php" );
+$api = new MediawikiApi( 'https://www.wikidata.org/w/api.php' );
 $api->login( new ApiUser( $username, $password ) );
 
 $services = new WikibaseFactory(
@@ -45,6 +44,7 @@ foreach ( $itemList as $item ) {
 	// Remove existing country statements
 	foreach ( $countryStatementList as $countryStatement ) {
 		$remover->remove( $countryStatement );
+		sleep( 1 );
 	}
 
 	// Create new statement country:novalue
@@ -54,4 +54,5 @@ foreach ( $itemList as $item ) {
 			),
 			$item
 	);
+	sleep( 1 );
 }
