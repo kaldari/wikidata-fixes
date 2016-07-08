@@ -16,10 +16,11 @@ use DataValues\StringValue;
 require_once( __DIR__ . '/vendor/autoload.php' );
 require_once( __DIR__ . '/config.inc.php' );
 
-// Use the mediawiki api and Login
+// Use the Wikidata API and Login
 $api = new MediawikiApi( 'https://www.wikidata.org/w/api.php' );
 $api->login( new ApiUser( $username, $password ) );
 
+// Instantiate WikibaseFactory
 $services = new WikibaseFactory(
     $api,
     new DataValues\Deserializers\DataValueDeserializer(),
@@ -38,6 +39,8 @@ $itemList = array(
 foreach ( $itemList as $item ) {
 	$revision = $getter->getFromId( $item );
 	$itemData = $revision->getContent()->getData();
+
+	// Get all the country claims for this item
 	$statementList = $itemData->getStatements();
 	$countryStatementList = $statementList->getByPropertyId( PropertyId::newFromNumber( 17 ) );
 
@@ -49,10 +52,10 @@ foreach ( $itemList as $item ) {
 
 	// Create new statement country:novalue
 	$services->newStatementCreator()->create(
-			new PropertyNoValueSnak(
-					PropertyId::newFromNumber( 17 )
-			),
-			$item
+		new PropertyNoValueSnak(
+			PropertyId::newFromNumber( 17 )
+		),
+		$item
 	);
 	sleep( 2 );
 }
