@@ -44,7 +44,7 @@ foreach ( $itemList as $item ) {
 	// Remove existing country statements
 	foreach ( $countryStatementList as $countryStatement ) {
 		$remover->remove( $countryStatement );
-		sleep( 1 );
+		sleep( 2 );
 	}
 
 	// Create new statement country:novalue
@@ -54,5 +54,5 @@ foreach ( $itemList as $item ) {
 			),
 			$item
 	);
-	sleep( 1 );
+	sleep( 2 );
 }
