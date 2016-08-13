@@ -1,6 +1,6 @@
 <?php
-//error_reporting( E_ALL );
-//ini_set( 'display_errors', 1 );
+error_reporting( E_ALL );
+ini_set( 'display_errors', 1 );
 
 use Mediawiki\Api\MediawikiApi;
 use Mediawiki\Api\ApiUser;
@@ -37,7 +37,7 @@ $remover = $services->newStatementRemover();
 
 // Put list of items here
 $itemList = array(
-	'Q58480'
+	'Q58481'
 );
 
 foreach ( $itemList as $item ) {
@@ -48,11 +48,20 @@ foreach ( $itemList as $item ) {
 	$statementList = $itemData->getStatements();
 	$countryStatementList = $statementList->getByPropertyId( PropertyId::newFromNumber( 17 ) );
 
-	// Change existing country statements to country:novalue
+	// Remove existing country statements
 	foreach ( $countryStatementList as $countryStatement ) {
-		$countryStatement->setMainSnak( new PropertyNoValueSnak( PropertyId::newFromNumber( 17 ) ) );
+		$remover->remove( $countryStatement );
 		sleep( 2 );
 	}
+
+	// Create new statement country:novalue
+	$services->newStatementCreator()->create(
+		new PropertyNoValueSnak(
+			PropertyId::newFromNumber( 17 )
+		),
+		$item
+	);
+	sleep( 2 );
 
 	// Create new statement: located in the administrative territorial entity:Antarctic Treaty area
 	$services->newStatementCreator()->create(
