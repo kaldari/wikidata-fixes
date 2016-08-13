@@ -44,7 +44,7 @@ foreach ( $itemList as $item ) {
 	$revision = $getter->getFromId( $item );
 	$itemData = $revision->getContent()->getData();
 
-	// Get all the country claims for this item (there should only be 1 per item)
+	// Get all the country claims for this item
 	$statementList = $itemData->getStatements();
 	$countryStatementList = $statementList->getByPropertyId( PropertyId::newFromNumber( 17 ) );
 
@@ -54,7 +54,7 @@ foreach ( $itemList as $item ) {
 		sleep( 2 );
 	}
 
-	// Create new statement country:novalue
+	// Create new statement: country:novalue
 	$services->newStatementCreator()->create(
 		new PropertyNoValueSnak(
 			PropertyId::newFromNumber( 17 )
