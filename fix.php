@@ -10,11 +10,15 @@ use Wikibase\DataModel\ItemContent;
 use Wikibase\DataModel\Snak\PropertyValueSnak;
 use Wikibase\DataModel\Snak\PropertyNoValueSnak;
 use Wikibase\DataModel\Entity\PropertyId;
+use Wikibase\DataModel\Entity\ItemId;
+use Wikibase\DataModel\Entity\EntityIdValue;
 use DataValues\StringValue;
 
 // Load all of the things
 require_once( __DIR__ . '/vendor/autoload.php' );
 require_once( __DIR__ . '/config.inc.php' );
+
+date_default_timezone_set( 'UTC' );
 
 // Use the Wikidata API and Login
 $api = new MediawikiApi( 'https://www.wikidata.org/w/api.php' );
@@ -40,22 +44,24 @@ foreach ( $itemList as $item ) {
 	$revision = $getter->getFromId( $item );
 	$itemData = $revision->getContent()->getData();
 
-	// Get all the country claims for this item
+	// Get all the country claims for this item (there should only be 1 per item)
 	$statementList = $itemData->getStatements();
 	$countryStatementList = $statementList->getByPropertyId( PropertyId::newFromNumber( 17 ) );
 
-	// Remove existing country statements
+	// Change existing country statements to country:novalue
 	foreach ( $countryStatementList as $countryStatement ) {
-		$remover->remove( $countryStatement );
+		$countryStatement->setMainSnak( new PropertyNoValueSnak( PropertyId::newFromNumber( 17 ) ) );
 		sleep( 2 );
 	}
 
-	// Create new statement country:novalue
+	// Create new statement: located in the administrative territorial entity:Antarctic Treaty area
 	$services->newStatementCreator()->create(
-		new PropertyNoValueSnak(
-			PropertyId::newFromNumber( 17 )
+		new PropertyValueSnak(
+			PropertyId::newFromNumber( 131 ),
+			new EntityIdValue( new ItemId( 'Q21590062' ) )
 		),
 		$item
 	);
+	echo $item . "\n";
 	sleep( 2 );
 }
