@@ -4,8 +4,9 @@ ini_set( 'display_errors', 1 );
 
 use Mediawiki\Api\MediawikiApi;
 use Mediawiki\Api\ApiUser;
-use Wikibase\Api\WikibaseFactory;
 use Mediawiki\DataModel\Revision;
+use Mediawiki\DataModel\EditInfo;
+use Wikibase\Api\WikibaseFactory;
 use Wikibase\DataModel\ItemContent;
 use Wikibase\DataModel\Snak\PropertyValueSnak;
 use Wikibase\DataModel\Snak\PropertyNoValueSnak;
@@ -24,6 +25,8 @@ date_default_timezone_set( 'UTC' );
 $api = new MediawikiApi( 'https://www.wikidata.org/w/api.php' );
 $api->login( new ApiUser( $username, $password ) );
 
+$editInfo = new EditInfo( '', false, true );
+
 // Instantiate WikibaseFactory
 $services = new WikibaseFactory(
     $api,
@@ -34,10 +37,11 @@ $services = new WikibaseFactory(
 // Get specific services
 $getter = $services->newRevisionGetter();
 $remover = $services->newStatementRemover();
+$creator = $services->newStatementCreator();
 
 // Put list of items here
 $itemList = array(
-	'Q58481'
+	'Q58984'
 );
 
 foreach ( $itemList as $item ) {
@@ -55,22 +59,24 @@ foreach ( $itemList as $item ) {
 	}
 
 	// Create new statement: country:novalue
-	$services->newStatementCreator()->create(
+	$creator->create(
 		new PropertyNoValueSnak(
 			PropertyId::newFromNumber( 17 )
 		),
-		$item
+		$item,
+		$editInfo
 	);
-	sleep( 2 );
+	sleep( 10 );
 
 	// Create new statement: located in the administrative territorial entity:Antarctic Treaty area
-	$services->newStatementCreator()->create(
+	$creator->create(
 		new PropertyValueSnak(
 			PropertyId::newFromNumber( 131 ),
 			new EntityIdValue( new ItemId( 'Q21590062' ) )
 		),
-		$item
+		$item,
+		$editInfo
 	);
 	echo $item . "\n";
-	sleep( 2 );
+	sleep( 10 );
 }
