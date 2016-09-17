@@ -25,6 +25,7 @@ date_default_timezone_set( 'UTC' );
 $api = new MediawikiApi( 'https://www.wikidata.org/w/api.php' );
 $api->login( new ApiUser( $username, $password ) );
 
+// Set the bot flag for the edits
 $editInfo = new EditInfo( '', false, true );
 
 // Instantiate WikibaseFactory
