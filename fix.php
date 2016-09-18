@@ -42,7 +42,7 @@ $creator = $services->newStatementCreator();
 
 // Put list of items here
 $itemList = array(
-	'Q58984'
+	'Q312957'
 );
 
 foreach ( $itemList as $item ) {
@@ -55,8 +55,11 @@ foreach ( $itemList as $item ) {
 
 	// Remove existing country statements
 	foreach ( $countryStatementList as $countryStatement ) {
-		$remover->remove( $countryStatement );
-		sleep( 2 );
+		$remover->remove(
+			$countryStatement,
+			$editInfo
+		);
+		sleep( 1 );
 	}
 
 	// Create new statement: country:novalue
@@ -67,7 +70,7 @@ foreach ( $itemList as $item ) {
 		$item,
 		$editInfo
 	);
-	sleep( 10 );
+	sleep( 2 );
 
 	// Create new statement: located in the administrative territorial entity:Antarctic Treaty area
 	$creator->create(
@@ -79,5 +82,5 @@ foreach ( $itemList as $item ) {
 		$editInfo
 	);
 	echo $item . "\n";
-	sleep( 10 );
+	sleep( 2 );
 }
