@@ -19709,6 +19709,6 @@ foreach ( $itemList as $item ) {
 	}
 }
 
-echo "Done.\n"
-echo "Errors:\n"
+echo "Done.\n";
+echo "Errors:\n";
 echo var_export( $errors );
