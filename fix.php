@@ -42,7 +42,13 @@ $creator = $services->newStatementCreator();
 
 // Put list of items here
 $itemList = array(
-	'Q312957'
+	'Q1099916',
+	'Q1099938',
+	'Q1099945',
+	'Q1099952',
+	'Q1099960',
+	'Q1099967',
+	'Q1100051'
 );
 
 foreach ( $itemList as $item ) {
@@ -73,14 +79,18 @@ foreach ( $itemList as $item ) {
 	sleep( 2 );
 
 	// Create new statement: located in the administrative territorial entity:Antarctic Treaty area
-	$creator->create(
-		new PropertyValueSnak(
-			PropertyId::newFromNumber( 131 ),
-			new EntityIdValue( new ItemId( 'Q21590062' ) )
-		),
-		$item,
-		$editInfo
-	);
-	echo $item . "\n";
-	sleep( 2 );
+	if ( $statementList->getByPropertyId( PropertyId::newFromNumber( 131 ) )->isEmpty() ) {
+		$creator->create(
+			new PropertyValueSnak(
+				PropertyId::newFromNumber( 131 ),
+				new EntityIdValue( new ItemId( 'Q21590062' ) )
+			),
+			$item,
+			$editInfo
+		);
+		echo $item . "\n";
+		sleep( 2 );
+	} else {
+		echo "Has an existing 131 claim\n";
+	}
 }
